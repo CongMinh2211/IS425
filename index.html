@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#143a29" />
+    <title>Tây Nguyên Food | Đặc sản có câu chuyện</title>
+    <meta
+      name="description"
+      content="Khám phá cà phê Buôn Ma Thuột, mắc ca Đắk Lắk, mật ong rừng, tiêu Đắk Nông và những hộp quà đặc sản Tây Nguyên."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="fallback-data.js"></script>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Đi tới nội dung chính</a>
+
+    <div class="announcement" role="status">
+      <p><i class="bi bi-truck"></i> Miễn phí giao hàng từ <strong>399.000đ</strong></p>
+      <p><i class="bi bi-patch-check-fill"></i> Đặc sản có nguồn gốc rõ ràng</p>
+      <p><i class="bi bi-gift-fill"></i> Gói quà theo câu chuyện bạn muốn gửi</p>
+    </div>
+
+    <header class="site-header" id="top">
+      <a class="brand" href="#home" aria-label="Tây Nguyên Food - Trang chủ">
+        <span class="brand-seal"><i class="bi bi-flower1"></i><b>TN</b></span>
+        <span class="brand-copy">
+          <strong>Tây Nguyên Food</strong>
+          <small>Đặc sản có câu chuyện</small>
+        </span>
+      </a>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Mở menu điều hướng" aria-controls="primaryNav" aria-expanded="false">
+        <i class="bi bi-list"></i>
+      </button>
+
+      <nav class="primary-nav" id="primaryNav" aria-label="Điều hướng chính">
+        <a href="#products">Sản phẩm</a>
+        <a href="#story">Câu chuyện</a>
+        <a href="#journal">Góc đại ngàn</a>
+        <a href="#contact">Liên hệ</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="round-action" id="wishlistButton" type="button" aria-label="Xem sản phẩm yêu thích">
+          <i class="bi bi-heart"></i><span class="action-count" id="wishlistCount">0</span>
+        </button>
+        <button class="cart-button" id="cartButton" type="button" aria-label="Mở giỏ hàng">
+          <i class="bi bi-bag-heart-fill"></i>
+          <span class="cart-button-copy"><b>Giỏ hàng</b><small id="cartSummary">Trống</small></span>
+          <span class="action-count" id="cartCount">0</span>
+        </button>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="hero" id="home" aria-labelledby="heroTitle">
+        <div class="hero-noise" aria-hidden="true"></div>
+        <div class="hero-art">
+          <img
+            src="tay-nguyen-food-hero.png"
+            alt="Cà phê, mật ong, mắc ca và cảnh núi rừng Tây Nguyên"
+            width="1536"
+            height="1024"
+            fetchpriority="high"
+          />
+        </div>
+        <div class="hero-copy reveal">
+          <p class="eyebrow light"><i class="bi bi-geo-alt-fill"></i> Từ Đắk Lắk đến căn bếp của bạn</p>
+          <h1 id="heroTitle">Món quà từ <em>đại ngàn.</em></h1>
+          <p class="hero-description">
+            Những hương vị Tây Nguyên được chọn theo mùa, gói ghém chỉn chu
+            và kể lại bằng câu chuyện của vùng đất.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-sun" href="#products"><i class="bi bi-bag-plus-fill"></i> Khám phá đặc sản</a>
+            <a class="text-link light" href="#story">Vì sao chúng mình chọn Tây Nguyên <i class="bi bi-arrow-down-right"></i></a>
+          </div>
+          <dl class="hero-stats" aria-label="Điểm nổi bật">
+            <div><dt>06</dt><dd>nhóm đặc sản</dd></div>
+            <div><dt>05</dt><dd>tỉnh vùng cao</dd></div>
+            <div><dt>01</dt><dd>câu chuyện chung</dd></div>
+          </dl>
+        </div>
+        <aside class="hero-note" aria-label="Thông tin mùa vụ">
+          <span class="hero-note-icon"><i class="bi bi-sun-fill"></i></span>
+          <p>Đang vào mùa</p>
+          <strong>Mật ong hoa cà phê</strong>
+          <span>Ngọt thanh, thơm dịu</span>
+        </aside>
+      </section>
+
+      <section class="category-band" aria-label="Danh mục đặc sản">
+        <div class="category-band-inner" id="categoryStrip">
+          <span class="loading-chip">Đang tải danh mục...</span>
+        </div>
+      </section>
+
+      <section class="catalog section" id="products" aria-labelledby="productsTitle">
+        <div class="section-intro split-intro reveal">
+          <div>
+            <p class="eyebrow"><i class="bi bi-grid-1x2-fill"></i> Chọn theo khẩu vị</p>
+            <h2 id="productsTitle">Tìm một hương vị<br />để mang về.</h2>
+          </div>
+          <p>
+            Lọc nhanh theo nhóm sản phẩm, tìm theo vùng nguyên liệu hoặc để
+            Tây Nguyên Food gợi ý những món quà đang được yêu thích.
+          </p>
+        </div>
+
+        <div class="catalog-controls" aria-label="Tìm kiếm và lọc sản phẩm">
+          <label class="search-field" for="productSearch">
+            <i class="bi bi-search"></i>
+            <span class="visually-hidden">Tìm sản phẩm</span>
+            <input id="productSearch" type="search" placeholder="Tìm cà phê, mật ong, quà tặng..." autocomplete="off" />
+            <button class="clear-search" id="clearSearch" type="button" aria-label="Xóa từ khóa tìm kiếm" hidden><i class="bi bi-x-lg"></i></button>
+          </label>
+          <label class="sort-field" for="sortSelect">
+            <span>Sắp xếp</span>
+            <select id="sortSelect">
+              <option value="featured">Gợi ý cho bạn</option>
+              <option value="newest">Mới nhất</option>
+              <option value="price-asc">Giá tăng dần</option>
+              <option value="price-desc">Giá giảm dần</option>
+              <option value="rating">Đánh giá cao</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="filter-row" id="categoryFilters" role="toolbar" aria-label="Lọc theo danh mục">
+          <button class="filter-chip is-active" type="button" data-category="all" aria-pressed="true">Tất cả</button>
+        </div>
+
+        <div class="results-row">
+          <p id="resultsMeta" aria-live="polite">Đang tìm những sản vật ngon nhất...</p>
+          <button class="wishlist-text-button" id="wishlistTextButton" type="button"><i class="bi bi-heart-fill"></i> Sản phẩm đã lưu</button>
+        </div>
+
+        <div class="product-grid" id="productGrid" aria-live="polite">
+          <div class="product-skeleton"></div>
+          <div class="product-skeleton"></div>
+          <div class="product-skeleton"></div>
+        </div>
+      </section>
+
+      <section class="story-section" id="story" aria-labelledby="storyTitle">
+        <div class="story-image reveal">
+          <div class="story-image-frame">
+            <img
+              src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1200&q=85"
+              alt="Khung cảnh vùng núi xanh mát"
+              loading="lazy"
+            />
+          </div>
+          <span class="stamp">Từ vùng<br />đất đỏ</span>
+        </div>
+        <div class="story-copy reveal">
+          <p class="eyebrow"><i class="bi bi-compass-fill"></i> Câu chuyện thương hiệu</p>
+          <h2 id="storyTitle">Không chỉ bán<br /><em>một món đặc sản.</em></h2>
+          <p>
+            Tây Nguyên Food kết nối sản vật bản địa với những người yêu hương vị
+            nguyên bản. Mỗi sản phẩm được đặt trong bối cảnh của vùng trồng,
+            mùa vụ và cách thưởng thức phù hợp.
+          </p>
+          <div class="story-points">
+            <article><i class="bi bi-pin-map-fill"></i><div><strong>Biết mình mua từ đâu</strong><span>Vùng trồng và nguồn gốc được ghi rõ.</span></div></article>
+            <article><i class="bi bi-box2-heart-fill"></i><div><strong>Biết cách dùng sao cho ngon</strong><span>Gợi ý dùng, bảo quản và kết hợp món.</span></div></article>
+            <article><i class="bi bi-gift-fill"></i><div><strong>Biết mình đang gửi điều gì</strong><span>Quà tặng được gói bằng câu chuyện địa phương.</span></div></article>
+          </div>
+          <a class="text-link" href="#journal">Đọc thêm câu chuyện đại ngàn <i class="bi bi-arrow-up-right"></i></a>
+        </div>
+      </section>
+
+      <section class="gift-banner" aria-label="Combo quà tặng">
+        <div class="gift-banner-copy reveal">
+          <p class="eyebrow light"><i class="bi bi-gift-fill"></i> Gói quà có chủ đích</p>
+          <h2>Đại Ngàn<br /><em>Gift Set</em></h2>
+          <p>Cà phê, mắc ca, mật ong và tiêu tuyển chọn trong một hộp quà mang chất Tây Nguyên.</p>
+          <button class="button button-cream" type="button" data-featured-gift><i class="bi bi-arrow-up-right"></i> Xem combo quà tặng</button>
+        </div>
+        <div class="gift-orbit" aria-hidden="true">
+          <span class="orbit-card orbit-card-one"><i class="bi bi-cup-hot-fill"></i> Cà phê</span>
+          <span class="orbit-card orbit-card-two"><i class="bi bi-flower1"></i> Mật ong</span>
+          <span class="orbit-card orbit-card-three"><i class="bi bi-brightness-alt-high-fill"></i> Mắc ca</span>
+          <div class="gift-orbit-core"><i class="bi bi-gift-fill"></i></div>
+        </div>
+      </section>
+
+      <section class="journal section" id="journal" aria-labelledby="journalTitle">
+        <div class="section-intro journal-heading reveal">
+          <div>
+            <p class="eyebrow"><i class="bi bi-journal-richtext"></i> Góc đại ngàn</p>
+            <h2 id="journalTitle">Đọc để hiểu hơn<br />trước khi chọn.</h2>
+          </div>
+          <a class="text-link" href="#contact">Nhận tư vấn chọn quà <i class="bi bi-arrow-up-right"></i></a>
+        </div>
+        <div class="post-grid" id="postGrid">
+          <div class="post-skeleton"></div>
+          <div class="post-skeleton"></div>
+          <div class="post-skeleton"></div>
+        </div>
+      </section>
+
+      <section class="contact-section" id="contact" aria-labelledby="contactTitle">
+        <div class="contact-intro reveal">
+          <p class="eyebrow light"><i class="bi bi-chat-heart-fill"></i> Có điều muốn hỏi?</p>
+          <h2 id="contactTitle">Kể chúng mình nghe<br />món quà bạn đang tìm.</h2>
+          <p>Để lại lời nhắn, đội ngũ sẽ gợi ý đặc sản theo ngân sách và người nhận.</p>
+          <div class="contact-facts">
+            <span><i class="bi bi-clock-fill"></i> Phản hồi trong giờ làm việc</span>
+            <span><i class="bi bi-shield-check"></i> Thông tin được lưu an toàn trong CSDL demo</span>
+          </div>
+        </div>
+        <form class="contact-form reveal" id="contactForm">
+          <label>Họ và tên<input name="name" type="text" placeholder="Nguyễn Minh Anh" required maxlength="80" /></label>
+          <label>Email<input name="email" type="email" placeholder="minhanh@example.com" required maxlength="120" /></label>
+          <label>Nội dung<textarea name="message" placeholder="Mình muốn tư vấn một hộp quà cho đối tác..." required maxlength="1500"></textarea></label>
+          <button class="button button-sun form-submit" type="submit"><i class="bi bi-send-fill"></i> Gửi lời nhắn</button>
+          <p class="form-note" id="contactStatus" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-brand">
+        <a class="brand" href="#top">
+          <span class="brand-seal"><i class="bi bi-flower1"></i><b>TN</b></span>
+          <span class="brand-copy"><strong>Tây Nguyên Food</strong><small>Đặc sản có câu chuyện</small></span>
+        </a>
+        <p>Một website demo thương mại điện tử có dữ liệu SQLite, phục vụ xây dựng và đo lường cho ASM.</p>
+      </div>
+      <div class="footer-links">
+        <div><strong>Khám phá</strong><a href="#products">Đặc sản</a><a href="#story">Câu chuyện</a><a href="#journal">Góc đại ngàn</a></div>
+        <div><strong>Hỗ trợ</strong><a href="#contact">Liên hệ</a><a href="#products">Giao hàng</a><a href="#products">Đổi trả</a></div>
+      </div>
+      <form class="newsletter" id="newsletterForm">
+        <strong>Nhận thư từ đại ngàn</strong>
+        <p>Một lá thư ngắn về mùa vụ, sản vật và những món quà đáng nhớ.</p>
+        <label>
+          <span class="visually-hidden">Email nhận tin</span>
+          <input name="email" type="email" placeholder="email@cuaban.com" required maxlength="120" />
+          <button type="submit" aria-label="Đăng ký nhận tin"><i class="bi bi-arrow-up-right"></i></button>
+        </label>
+        <small id="newsletterStatus" aria-live="polite"></small>
+      </form>
+      <div class="footer-bottom">
+        <span>© 2026 Tây Nguyên Food. Bản demo phục vụ học tập.</span>
+        <a href="#top"><i class="bi bi-arrow-up"></i> Lên đầu trang</a>
+      </div>
+    </footer>
+
+    <div class="drawer" id="cartDrawer" aria-hidden="true">
+      <button class="drawer-backdrop" type="button" data-close-cart aria-label="Đóng giỏ hàng"></button>
+      <aside class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+        <div class="drawer-head">
+          <div><p class="eyebrow">Giỏ hàng của bạn</p><h2 id="cartTitle">Mang hương vị về nhà.</h2></div>
+          <button class="icon-close" type="button" data-close-cart aria-label="Đóng giỏ hàng"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-summary" id="cartSummaryPanel"></div>
+        <button class="button button-forest checkout-trigger" id="checkoutButton" type="button"><i class="bi bi-credit-card-2-front-fill"></i> Tiếp tục thanh toán</button>
+        <p class="drawer-note"><i class="bi bi-info-circle"></i> Đây là luồng đặt hàng demo, chưa kết nối cổng thanh toán.</p>
+      </aside>
+    </div>
+
+    <dialog class="product-dialog" id="productDialog" aria-labelledby="quickViewTitle">
+      <button class="dialog-close" type="button" data-close-dialog aria-label="Đóng xem nhanh"><i class="bi bi-x-lg"></i></button>
+      <div id="quickViewContent"></div>
+    </dialog>
+
+    <dialog class="checkout-dialog" id="checkoutDialog" aria-labelledby="checkoutTitle">
+      <button class="dialog-close" type="button" data-close-checkout aria-label="Đóng thanh toán"><i class="bi bi-x-lg"></i></button>
+      <div class="checkout-heading">
+        <p class="eyebrow"><i class="bi bi-bag-check-fill"></i> Bước cuối cùng</p>
+        <h2 id="checkoutTitle">Thông tin nhận quà</h2>
+        <p>Đơn hàng sẽ được lưu vào CSDL SQLite. Chưa có thanh toán thật.</p>
+      </div>
+      <form class="checkout-form" id="checkoutForm">
+        <div class="form-columns">
+          <label>Họ và tên<input name="name" type="text" required maxlength="80" /></label>
+          <label>Số điện thoại<input name="phone" type="tel" required maxlength="25" /></label>
+        </div>
+        <label>Email<input name="email" type="email" required maxlength="120" /></label>
+        <label>Địa chỉ nhận hàng<textarea name="address" required maxlength="260" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành"></textarea></label>
+        <label>Lời nhắn cho đơn hàng<textarea name="note" maxlength="500" placeholder="Ví dụ: gói quà và thêm thiệp chúc mừng"></textarea></label>
+        <div class="checkout-order-preview" id="checkoutOrderPreview"></div>
+        <button class="button button-forest form-submit" type="submit"><i class="bi bi-check2-circle"></i> Xác nhận đặt hàng</button>
+        <p class="form-note" id="checkoutStatus" aria-live="polite"></p>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite">
+      <i class="bi bi-check-circle-fill"></i><span id="toastMessage"></span>
+    </div>
+  </body>
+</html>
