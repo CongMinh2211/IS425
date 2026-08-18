@@ -1,13 +1,15 @@
 const http = require("node:http");
 const fs = require("node:fs");
 const path = require("node:path");
-const { randomUUID } = require("node:crypto");
+const { randomBytes, randomUUID, scryptSync, timingSafeEqual } = require("node:crypto");
 const { DatabaseSync } = require("node:sqlite");
 
 const ROOT = __dirname;
 const DATA_DIR = path.join(ROOT, "data");
 const DATABASE_PATH = path.join(DATA_DIR, "tay-nguyen-food.sqlite");
 const PORT = Number(process.env.PORT || 3000);
+const SESSION_COOKIE = "tnf_session";
+const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 14;
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
 
@@ -76,9 +78,27 @@ function initializeDatabase() {
       updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
 
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL UNIQUE,
+      password_hash TEXT NOT NULL,
+      password_salt TEXT NOT NULL,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS user_sessions (
+      token TEXT PRIMARY KEY,
+      user_id INTEGER NOT NULL,
+      expires_at INTEGER NOT NULL,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+    );
+
     CREATE TABLE IF NOT EXISTS orders (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       code TEXT NOT NULL UNIQUE,
+      user_id INTEGER,
       customer_name TEXT NOT NULL,
       email TEXT NOT NULL,
       phone TEXT NOT NULL,
@@ -88,7 +108,8 @@ function initializeDatabase() {
       shipping_fee INTEGER NOT NULL,
       total INTEGER NOT NULL,
       status TEXT NOT NULL DEFAULT 'pending',
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(user_id) REFERENCES users(id)
     );
 
     CREATE TABLE IF NOT EXISTS order_items (
@@ -102,6 +123,15 @@ function initializeDatabase() {
       FOREIGN KEY(order_id) REFERENCES orders(id) ON DELETE CASCADE,
       FOREIGN KEY(product_id) REFERENCES products(id)
     );
+  `);
+
+  const orderColumns = db.prepare("PRAGMA table_info(orders)").all();
+  if (!orderColumns.some((column) => column.name === "user_id")) {
+    db.exec("ALTER TABLE orders ADD COLUMN user_id INTEGER");
+  }
+  db.exec(`
+    CREATE INDEX IF NOT EXISTS idx_user_sessions_user_id ON user_sessions(user_id);
+    CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders(user_id);
   `);
 
   const insertCategory = db.prepare(
@@ -137,7 +167,7 @@ function initializeDatabase() {
         "Bán chạy",
         4.9,
         128,
-        "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1000&q=85",
+        "assets/product-coffee.jpg",
         "Robusta rang mộc vị đậm, hậu ngọt, hợp pha phin hoặc máy.",
         "Buôn Ma Thuột, Đắk Lắk",
         "500g",
@@ -154,7 +184,7 @@ function initializeDatabase() {
         "Hương hoa quả",
         4.8,
         74,
-        "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1000&q=85",
+        "assets/product-coffee-honey.jpg",
         "Hương cam chín và caramel nhẹ, cân bằng cho pha thủ công.",
         "Cầu Đất, Lâm Đồng",
         "340g",
@@ -171,7 +201,7 @@ function initializeDatabase() {
         "Mới về",
         4.9,
         93,
-        "https://images.unsplash.com/photo-1536598998941-7c9c76c63156?auto=format&fit=crop&w=1000&q=85",
+        "assets/product-macadamia.jpg",
         "Hạt béo bùi, tách vỏ tiện dụng, không phụ gia.",
         "Ea H'leo, Đắk Lắk",
         "250g",
@@ -188,7 +218,7 @@ function initializeDatabase() {
         "Theo mùa",
         4.9,
         81,
-        "https://images.unsplash.com/photo-1587049352851-8d4e89133924?auto=format&fit=crop&w=1000&q=85",
+        "assets/product-honey.jpg",
         "Mật ngọt thanh, thơm dịu, dùng pha trà hoặc làm quà.",
         "Cư M'gar, Đắk Lắk",
         "500ml",
@@ -205,7 +235,7 @@ function initializeDatabase() {
         "Đậm vị",
         4.8,
         66,
-        "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1000&q=85",
+        "assets/product-pepper.jpg",
         "Tiêu hạt thơm ấm, phù hợp cho căn bếp hằng ngày.",
         "Đắk Song, Đắk Nông",
         "200g",
@@ -222,7 +252,7 @@ function initializeDatabase() {
         "Đặc sản vùng",
         4.7,
         42,
-        "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1000&q=85",
+        "assets/product-dried.jpg",
         "Măng khô thơm, dễ bảo quản cho món canh và món hầm.",
         "Kbang, Gia Lai",
         "300g",
@@ -239,7 +269,7 @@ function initializeDatabase() {
         "Quà vùng cao",
         4.9,
         57,
-        "https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&w=1000&q=85",
+        "assets/product-beef.jpg",
         "Đặc sản khô đậm đà, gợi ý dùng cùng muối kiến vàng.",
         "Krông Pa, Gia Lai",
         "300g",
@@ -256,7 +286,7 @@ function initializeDatabase() {
         "Gói quà sẵn",
         5.0,
         46,
-        "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1000&q=85",
+        "assets/product-gift.jpg",
         "Hộp quà gồm cà phê, mắc ca, mật ong và tiêu tuyển chọn.",
         "Tây Nguyên",
         "01 hộp",
@@ -283,7 +313,7 @@ function initializeDatabase() {
       "Đúng mùa",
       4.9,
       69,
-      "https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?auto=format&fit=crop&w=1000&q=85",
+      "assets/product-durian.jpg",
       "Miếng sầu riêng sấy lạnh thơm béo, giữ trọn vị trái cây chín.",
       "Krông Pắc, Đắk Lắk",
       "200g",
@@ -300,7 +330,7 @@ function initializeDatabase() {
       "Tuyển chọn",
       4.9,
       51,
-      "https://images.unsplash.com/photo-1512568400610-62da28bc8a13?auto=format&fit=crop&w=1000&q=85",
+      "assets/product-coffee-honey.jpg",
       "Sơ chế mật ong cho hương ngọt trái cây và hậu vị mượt mà.",
       "Cầu Đất, Lâm Đồng",
       "250g",
@@ -317,7 +347,7 @@ function initializeDatabase() {
       "Nguyên chất",
       4.8,
       88,
-      "https://images.unsplash.com/photo-1471943311424-646960669fbc?auto=format&fit=crop&w=1000&q=85",
+      "assets/product-honey.jpg",
       "Mật ong rừng hương đậm, phù hợp pha nước ấm và làm quà.",
       "Chư Păh, Gia Lai",
       "500ml",
@@ -325,6 +355,21 @@ function initializeDatabase() {
       1,
     ],
   ].forEach((product) => insertNewProduct.run(...product));
+
+  const updateProductImage = db.prepare("UPDATE products SET image = ? WHERE id = ?");
+  [
+    ["assets/product-coffee.jpg", 1],
+    ["assets/product-coffee-honey.jpg", 2],
+    ["assets/product-macadamia.jpg", 3],
+    ["assets/product-honey.jpg", 4],
+    ["assets/product-pepper.jpg", 5],
+    ["assets/product-dried.jpg", 6],
+    ["assets/product-beef.jpg", 7],
+    ["assets/product-gift.jpg", 8],
+    ["assets/product-durian.jpg", 9],
+    ["assets/product-coffee-honey.jpg", 10],
+    ["assets/product-honey.jpg", 11],
+  ].forEach((image) => updateProductImage.run(...image));
 
   const postCount = Number(db.prepare("SELECT COUNT(*) AS count FROM posts").get().count);
   if (postCount === 0) {
@@ -337,7 +382,7 @@ function initializeDatabase() {
         "ca-phe-buon-ma-thuot-co-gi-dac-biet",
         "Cà phê Buôn Ma Thuột có gì đặc biệt?",
         "Cà phê Tây Nguyên",
-        "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1000&q=85",
+        "assets/product-coffee.jpg",
         "Từ độ cao, thổ nhưỡng đến kiểu rang, cùng khám phá lý do hạt cà phê vùng này có hậu vị riêng.",
         6,
         "2026-08-10",
@@ -347,7 +392,7 @@ function initializeDatabase() {
         "dac-san-tay-nguyen-lam-qua",
         "Đặc sản Tây Nguyên làm quà: chọn gì cho tinh tế?",
         "Cẩm nang mua đặc sản",
-        "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=1000&q=85",
+        "assets/product-gift.jpg",
         "Gợi ý cách chọn quà theo dịp, người nhận và ngân sách để hộp quà có câu chuyện hơn.",
         5,
         "2026-08-07",
@@ -357,13 +402,20 @@ function initializeDatabase() {
         "mac-ca-dak-lak-tu-hat-den-qua-tang",
         "Mắc ca Đắk Lắk: từ hạt béo bùi đến món quà sức khỏe",
         "Kiến thức sản phẩm",
-        "https://images.unsplash.com/photo-1518492104633-130d0cc84637?auto=format&fit=crop&w=1000&q=85",
+        "assets/product-macadamia.jpg",
         "Mẹo chọn hạt, bảo quản và sử dụng mắc ca để giữ được độ giòn thơm tự nhiên.",
         4,
         "2026-08-03",
       ],
     ].forEach((post) => insertPost.run(...post));
   }
+
+  const updatePostImage = db.prepare("UPDATE posts SET image = ? WHERE id = ?");
+  [
+    ["assets/product-coffee.jpg", 1],
+    ["assets/product-gift.jpg", 2],
+    ["assets/product-macadamia.jpg", 3],
+  ].forEach((image) => updatePostImage.run(...image));
 }
 
 function toProduct(row) {
@@ -452,12 +504,13 @@ function getProduct(identifier) {
   return row ? toProduct(row) : null;
 }
 
-function sendJson(response, status, payload) {
+function sendJson(response, status, payload, headers = {}) {
   const body = JSON.stringify(payload);
   response.writeHead(status, {
     "Content-Type": "application/json; charset=utf-8",
     "Content-Length": Buffer.byteLength(body),
     "Cache-Control": "no-store",
+    ...headers,
   });
   response.end(body);
 }
@@ -489,7 +542,184 @@ function ensureEmail(email) {
   }
 }
 
-function createOrder(payload) {
+function toUser(row) {
+  return {
+    id: Number(row.id),
+    name: row.name,
+    email: row.email,
+    createdAt: row.created_at,
+  };
+}
+
+function cleanPassword(value) {
+  if (typeof value !== "string" || value.length < 8 || value.length > 128) {
+    throw new HttpError(400, "Mật khẩu cần từ 8 đến 128 ký tự.");
+  }
+  return value;
+}
+
+function hashPassword(password, salt) {
+  return scryptSync(password, salt, 64);
+}
+
+function getUserByEmail(email) {
+  return db.prepare(`
+    SELECT id, name, email, password_hash, password_salt, created_at
+    FROM users
+    WHERE email = ?
+  `).get(email);
+}
+
+function getUserById(id) {
+  const row = db.prepare("SELECT id, name, email, created_at FROM users WHERE id = ?").get(id);
+  return row ? toUser(row) : null;
+}
+
+function registerUser(payload) {
+  const name = cleanText(payload.name, 80);
+  const email = cleanText(payload.email, 120).toLowerCase();
+  const password = cleanPassword(payload.password);
+  if (!name) throw new HttpError(400, "Vui lòng nhập họ và tên.");
+  ensureEmail(email);
+  if (getUserByEmail(email)) throw new HttpError(409, "Email này đã được đăng ký. Hãy đăng nhập để tiếp tục.");
+
+  const salt = randomBytes(16).toString("base64");
+  const passwordHash = hashPassword(password, salt).toString("base64");
+  const result = db
+    .prepare("INSERT INTO users (name, email, password_hash, password_salt) VALUES (?, ?, ?, ?)")
+    .run(name, email, passwordHash, salt);
+  return getUserById(Number(result.lastInsertRowid));
+}
+
+function authenticateUser(payload) {
+  const email = cleanText(payload.email, 120).toLowerCase();
+  const password = cleanPassword(payload.password);
+  ensureEmail(email);
+  const user = getUserByEmail(email);
+  if (!user) throw new HttpError(401, "Email hoặc mật khẩu chưa chính xác.");
+
+  const expected = Buffer.from(user.password_hash, "base64");
+  const received = hashPassword(password, user.password_salt);
+  if (expected.length !== received.length || !timingSafeEqual(expected, received)) {
+    throw new HttpError(401, "Email hoặc mật khẩu chưa chính xác.");
+  }
+  return toUser(user);
+}
+
+function parseCookies(cookieHeader = "") {
+  return cookieHeader.split(";").reduce((cookies, part) => {
+    const separator = part.indexOf("=");
+    if (separator < 1) return cookies;
+    const name = part.slice(0, separator).trim();
+    const value = part.slice(separator + 1).trim();
+    cookies[name] = decodeURIComponent(value);
+    return cookies;
+  }, {});
+}
+
+function sessionCookie(token, maxAge = SESSION_MAX_AGE_SECONDS) {
+  const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
+  return `${SESSION_COOKIE}=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${secure}`;
+}
+
+function createSession(userId) {
+  const now = Date.now();
+  const token = randomBytes(32).toString("base64url");
+  db.prepare("DELETE FROM user_sessions WHERE expires_at <= ?").run(now);
+  db.prepare("INSERT INTO user_sessions (token, user_id, expires_at) VALUES (?, ?, ?)")
+    .run(token, userId, now + SESSION_MAX_AGE_SECONDS * 1000);
+  return token;
+}
+
+function getAuthenticatedUser(request) {
+  const token = parseCookies(request.headers.cookie)[SESSION_COOKIE];
+  if (!token || token.length > 128) return null;
+  const row = db.prepare(`
+    SELECT u.id, u.name, u.email, u.created_at
+    FROM user_sessions s
+    JOIN users u ON u.id = s.user_id
+    WHERE s.token = ? AND s.expires_at > ?
+  `).get(token, Date.now());
+  return row ? toUser(row) : null;
+}
+
+function requireAuthenticatedUser(request) {
+  const user = getAuthenticatedUser(request);
+  if (!user) throw new HttpError(401, "Vui lòng đăng nhập để xem đơn hàng của bạn.");
+  return user;
+}
+
+function deleteSession(request) {
+  const token = parseCookies(request.headers.cookie)[SESSION_COOKIE];
+  if (token) db.prepare("DELETE FROM user_sessions WHERE token = ?").run(token);
+}
+
+function toOrderSummary(row) {
+  return {
+    code: row.code,
+    status: row.status,
+    subtotal: Number(row.subtotal),
+    shippingFee: Number(row.shipping_fee),
+    total: Number(row.total),
+    itemCount: Number(row.item_count),
+    unitCount: Number(row.unit_count),
+    createdAt: row.created_at,
+  };
+}
+
+function getOrdersForUser(userId) {
+  const rows = db.prepare(`
+    SELECT o.code, o.status, o.subtotal, o.shipping_fee, o.total, o.created_at,
+      COUNT(oi.id) AS item_count, COALESCE(SUM(oi.quantity), 0) AS unit_count
+    FROM orders o
+    LEFT JOIN order_items oi ON oi.order_id = o.id
+    WHERE o.user_id = ?
+    GROUP BY o.id
+    ORDER BY o.created_at DESC, o.id DESC
+  `).all(userId);
+  return rows.map(toOrderSummary);
+}
+
+function getOrderForUser(userId, code) {
+  const row = db.prepare(`
+    SELECT id, code, customer_name, email, phone, address, note, subtotal, shipping_fee, total, status, created_at
+    FROM orders
+    WHERE user_id = ? AND code = ?
+  `).get(userId, code);
+  if (!row) throw new HttpError(404, "Không tìm thấy đơn hàng này trong tài khoản của bạn.");
+
+  const items = db.prepare(`
+    SELECT product_id, product_name, unit_price, quantity, line_total
+    FROM order_items
+    WHERE order_id = ?
+    ORDER BY id
+  `).all(row.id).map((item) => ({
+    productId: Number(item.product_id),
+    name: item.product_name,
+    unitPrice: Number(item.unit_price),
+    quantity: Number(item.quantity),
+    lineTotal: Number(item.line_total),
+  }));
+
+  return {
+    code: row.code,
+    status: row.status,
+    subtotal: Number(row.subtotal),
+    shippingFee: Number(row.shipping_fee),
+    total: Number(row.total),
+    createdAt: row.created_at,
+    customer: {
+      name: row.customer_name,
+      email: row.email,
+      phone: row.phone,
+      address: row.address,
+    },
+    note: row.note || "",
+    items,
+  };
+}
+
+function createOrder(payload, userId = null) {
   const customer = payload.customer || {};
   const name = cleanText(customer.name, 80);
   const email = cleanText(customer.email, 120).toLowerCase();
@@ -546,10 +776,10 @@ function createOrder(payload) {
   try {
     const result = db
       .prepare(`
-        INSERT INTO orders (code, customer_name, email, phone, address, note, subtotal, shipping_fee, total)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO orders (user_id, code, customer_name, email, phone, address, note, subtotal, shipping_fee, total)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `)
-      .run(code, name, email, phone, address, note || null, subtotal, shippingFee, total);
+      .run(userId, code, name, email, phone, address, note || null, subtotal, shippingFee, total);
 
     const orderId = Number(result.lastInsertRowid);
     const insertItem = db.prepare(`
@@ -576,6 +806,41 @@ async function handleApi(request, response, url) {
   if (method === "OPTIONS") {
     response.writeHead(204, { Allow: "GET, POST, OPTIONS" });
     response.end();
+    return;
+  }
+
+  if (method === "GET" && pathname === "/api/auth/me") {
+    sendJson(response, 200, { user: getAuthenticatedUser(request) });
+    return;
+  }
+
+  if (method === "POST" && pathname === "/api/auth/register") {
+    const user = registerUser(await readJson(request));
+    const token = createSession(user.id);
+    sendJson(
+      response,
+      201,
+      { message: "Tài khoản đã được tạo. Chào mừng bạn đến với Tây Nguyên Food!", user },
+      { "Set-Cookie": sessionCookie(token) },
+    );
+    return;
+  }
+
+  if (method === "POST" && pathname === "/api/auth/login") {
+    const user = authenticateUser(await readJson(request));
+    const token = createSession(user.id);
+    sendJson(
+      response,
+      200,
+      { message: "Đăng nhập thành công. Rất vui được gặp lại bạn!", user },
+      { "Set-Cookie": sessionCookie(token) },
+    );
+    return;
+  }
+
+  if (method === "POST" && pathname === "/api/auth/logout") {
+    deleteSession(request);
+    sendJson(response, 200, { message: "Bạn đã đăng xuất an toàn." }, { "Set-Cookie": sessionCookie("", 0) });
     return;
   }
 
@@ -610,6 +875,20 @@ async function handleApi(request, response, url) {
     return;
   }
 
+  if (method === "GET" && pathname === "/api/orders/mine") {
+    const user = requireAuthenticatedUser(request);
+    sendJson(response, 200, { items: getOrdersForUser(user.id) });
+    return;
+  }
+
+  if (method === "GET" && pathname.startsWith("/api/orders/")) {
+    const user = requireAuthenticatedUser(request);
+    const code = cleanText(decodeURIComponent(pathname.slice("/api/orders/".length)), 80);
+    if (!code) throw new HttpError(400, "Mã đơn hàng không hợp lệ.");
+    sendJson(response, 200, { item: getOrderForUser(user.id, code) });
+    return;
+  }
+
   if (method === "POST" && pathname === "/api/contact") {
     const body = await readJson(request);
     const name = cleanText(body.name, 80);
@@ -635,7 +914,8 @@ async function handleApi(request, response, url) {
   }
 
   if (method === "POST" && pathname === "/api/orders") {
-    const order = createOrder(await readJson(request));
+    const user = getAuthenticatedUser(request);
+    const order = createOrder(await readJson(request), user?.id || null);
     sendJson(response, 201, { message: "Đặt hàng thành công. Đây là đơn hàng demo, chưa kết nối cổng thanh toán.", order });
     return;
   }

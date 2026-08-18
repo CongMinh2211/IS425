@@ -51,6 +51,10 @@
       </nav>
 
       <div class="header-actions">
+        <button class="account-button" id="accountButton" type="button" aria-label="Mở tài khoản" aria-haspopup="dialog">
+          <i class="bi bi-person-circle"></i>
+          <span class="account-copy" id="accountCopy"><b>Tài khoản</b><small>Đăng nhập</small></span>
+        </button>
         <button class="round-action" id="wishlistButton" type="button" aria-label="Xem sản phẩm yêu thích">
           <i class="bi bi-heart"></i><span class="action-count" id="wishlistCount">0</span>
         </button>
@@ -67,10 +71,10 @@
         <div class="hero-noise" aria-hidden="true"></div>
         <div class="hero-art">
           <img
-            src="tay-nguyen-food-hero.png"
-            alt="Cà phê, mật ong, mắc ca và cảnh núi rừng Tây Nguyên"
-            width="1536"
-            height="1024"
+            src="assets/dat-do-bazan.jpg"
+            alt="Những thửa ruộng trên vùng đất đỏ bazan Tây Nguyên"
+            width="500"
+            height="333"
             fetchpriority="high"
           />
         </div>
@@ -86,7 +90,7 @@
             <a class="text-link light" href="#story">Vì sao chúng mình chọn Tây Nguyên <i class="bi bi-arrow-down-right"></i></a>
           </div>
           <dl class="hero-stats" aria-label="Điểm nổi bật">
-            <div><dt>06</dt><dd>nhóm đặc sản</dd></div>
+            <div><dt>07</dt><dd>nhóm đặc sản</dd></div>
             <div><dt>05</dt><dd>tỉnh vùng cao</dd></div>
             <div><dt>01</dt><dd>câu chuyện chung</dd></div>
           </dl>
@@ -146,9 +150,58 @@
         </div>
 
         <div class="product-grid" id="productGrid" aria-live="polite">
-          <div class="product-skeleton"></div>
-          <div class="product-skeleton"></div>
-          <div class="product-skeleton"></div>
+          <article class="product-card product-card-static">
+            <div class="product-image">
+              <img src="assets/product-coffee.jpg" alt="Cà phê rang mộc Buôn Ma Thuột" data-image-fallback onerror="this.onerror=null;this.src='assets/product-fallback.svg'" />
+              <span class="product-badge">Bán chạy</span><span class="stock-badge">500g</span>
+            </div>
+            <div class="product-content">
+              <div class="product-topline"><span class="product-origin"><i class="bi bi-geo-alt-fill"></i> Buôn Ma Thuột</span><span class="rating"><i class="bi bi-star-fill"></i> 4.9</span></div>
+              <h3 class="product-title">Cà phê rang mộc Buôn Ma Thuột</h3>
+              <p class="product-description">Robusta đậm vị, hậu ngọt và thơm nồng hương cao nguyên.</p>
+              <div class="product-price-row"><span class="price-stack"><strong class="price">189.000đ</strong></span><span class="product-weight">500g</span></div>
+              <div class="product-actions"><a class="card-button" href="#contact"><i class="bi bi-chat-heart-fill"></i> Tư vấn chọn quà</a></div>
+            </div>
+          </article>
+          <article class="product-card product-card-static">
+            <div class="product-image">
+              <img src="assets/product-macadamia.jpg" alt="Mắc ca Đắk Lắk rang mộc" data-image-fallback onerror="this.onerror=null;this.src='assets/product-fallback.svg'" />
+              <span class="product-badge">Mới về</span><span class="stock-badge">250g</span>
+            </div>
+            <div class="product-content">
+              <div class="product-topline"><span class="product-origin"><i class="bi bi-geo-alt-fill"></i> Ea H'leo</span><span class="rating"><i class="bi bi-star-fill"></i> 4.9</span></div>
+              <h3 class="product-title">Mắc ca Đắk Lắk rang mộc</h3>
+              <p class="product-description">Hạt béo bùi, tách vỏ tiện dụng, không phụ gia.</p>
+              <div class="product-price-row"><span class="price-stack"><strong class="price">165.000đ</strong></span><span class="product-weight">250g</span></div>
+              <div class="product-actions"><a class="card-button" href="#contact"><i class="bi bi-chat-heart-fill"></i> Tư vấn chọn quà</a></div>
+            </div>
+          </article>
+          <article class="product-card product-card-static">
+            <div class="product-image">
+              <img src="assets/product-honey.jpg" alt="Mật ong hoa cà phê" data-image-fallback onerror="this.onerror=null;this.src='assets/product-fallback.svg'" />
+              <span class="product-badge">Theo mùa</span><span class="stock-badge">500ml</span>
+            </div>
+            <div class="product-content">
+              <div class="product-topline"><span class="product-origin"><i class="bi bi-geo-alt-fill"></i> Cư M'gar</span><span class="rating"><i class="bi bi-star-fill"></i> 4.9</span></div>
+              <h3 class="product-title">Mật ong hoa cà phê</h3>
+              <p class="product-description">Ngọt thanh, thơm dịu, phù hợp pha trà hoặc làm quà.</p>
+              <div class="product-price-row"><span class="price-stack"><strong class="price">220.000đ</strong></span><span class="product-weight">500ml</span></div>
+              <div class="product-actions"><a class="card-button" href="#contact"><i class="bi bi-chat-heart-fill"></i> Tư vấn chọn quà</a></div>
+            </div>
+          </article>
+          <article class="product-card product-card-static">
+            <div class="product-image">
+              <img src="assets/product-durian.jpg" alt="Sầu riêng sấy lạnh Krông Pắc" data-image-fallback onerror="this.onerror=null;this.src='assets/product-fallback.svg'" />
+              <span class="product-badge">Đúng mùa</span><span class="stock-badge">200g</span>
+            </div>
+            <div class="product-content">
+              <div class="product-topline"><span class="product-origin"><i class="bi bi-geo-alt-fill"></i> Krông Pắc</span><span class="rating"><i class="bi bi-star-fill"></i> 4.9</span></div>
+              <h3 class="product-title">Sầu riêng sấy lạnh Krông Pắc</h3>
+              <p class="product-description">Thơm béo, giữ trọn vị trái cây chín của mùa vụ Tây Nguyên.</p>
+              <div class="product-price-row"><span class="price-stack"><strong class="price">235.000đ</strong></span><span class="product-weight">200g</span></div>
+              <div class="product-actions"><a class="card-button" href="#contact"><i class="bi bi-chat-heart-fill"></i> Tư vấn chọn quà</a></div>
+            </div>
+          </article>
         </div>
       </section>
 
@@ -156,8 +209,8 @@
         <div class="story-image reveal">
           <div class="story-image-frame">
             <img
-              src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1200&q=85"
-              alt="Khung cảnh vùng núi xanh mát"
+              src="assets/dat-do-bazan.jpg"
+              alt="Những thửa ruộng trên vùng đất đỏ bazan"
               loading="lazy"
             />
           </div>
@@ -265,9 +318,13 @@
           <div><p class="eyebrow">Giỏ hàng của bạn</p><h2 id="cartTitle">Mang hương vị về nhà.</h2></div>
           <button class="icon-close" type="button" data-close-cart aria-label="Đóng giỏ hàng"><i class="bi bi-x-lg"></i></button>
         </div>
+        <div class="cart-progress" id="cartProgress"></div>
         <div class="cart-items" id="cartItems"></div>
         <div class="cart-summary" id="cartSummaryPanel"></div>
-        <button class="button button-forest checkout-trigger" id="checkoutButton" type="button"><i class="bi bi-credit-card-2-front-fill"></i> Tiếp tục thanh toán</button>
+        <div class="drawer-actions">
+          <button class="button button-forest checkout-trigger" id="checkoutButton" type="button"><i class="bi bi-credit-card-2-front-fill"></i> Tiếp tục thanh toán</button>
+          <button class="cart-clear" id="clearCartButton" type="button"><i class="bi bi-trash3"></i> Xóa tất cả</button>
+        </div>
         <p class="drawer-note"><i class="bi bi-info-circle"></i> Đây là luồng đặt hàng demo, chưa kết nối cổng thanh toán.</p>
       </aside>
     </div>
@@ -296,6 +353,20 @@
         <button class="button button-forest form-submit" type="submit"><i class="bi bi-check2-circle"></i> Xác nhận đặt hàng</button>
         <p class="form-note" id="checkoutStatus" aria-live="polite"></p>
       </form>
+    </dialog>
+
+    <dialog class="account-dialog" id="accountDialog" aria-labelledby="accountDialogTitle">
+      <button class="dialog-close" type="button" data-close-account aria-label="Đóng tài khoản"><i class="bi bi-x-lg"></i></button>
+      <div id="accountDialogContent" class="account-dialog-content">
+        <div class="account-loading"><i class="bi bi-arrow-repeat"></i><span>Đang chuẩn bị tài khoản...</span></div>
+      </div>
+    </dialog>
+
+    <dialog class="order-dialog" id="orderDialog" aria-labelledby="orderDialogTitle">
+      <button class="dialog-close" type="button" data-close-order aria-label="Đóng chi tiết đơn hàng"><i class="bi bi-x-lg"></i></button>
+      <div id="orderDetailContent" class="order-detail-content">
+        <div class="account-loading"><i class="bi bi-arrow-repeat"></i><span>Đang tải đơn hàng...</span></div>
+      </div>
     </dialog>
 
     <div class="toast" id="toast" role="status" aria-live="polite">

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title desc">
+  <title id="title">Tây Nguyên Food</title>
+  <desc id="desc">Minh họa sản vật Tây Nguyên trên nền đất đỏ bazan</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e9c77c"/>
+      <stop offset=".55" stop-color="#c96c3d"/>
+      <stop offset="1" stop-color="#7d3728"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#fff7df"/>
+      <stop offset="1" stop-color="#f4bd59"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <circle cx="625" cy="118" r="94" fill="url(#sun)" opacity=".9"/>
+  <path d="M0 450C130 350 232 378 352 440s250 63 448-53v213H0Z" fill="#153f2c" opacity=".94"/>
+  <path d="M0 488c145-79 270-40 396 17 123 56 264 54 404-13v108H0Z" fill="#0e2a1d" opacity=".76"/>
+  <g fill="none" stroke="#f9e4af" stroke-width="13" stroke-linecap="round" opacity=".92">
+    <path d="M240 389c23-105 52-143 96-198"/>
+    <path d="M327 324c-55-10-96-42-119-83"/>
+    <path d="M336 271c61-18 100-52 119-94"/>
+  </g>
+  <g fill="#fff9e9">
+    <path d="M296 205c-59-48-88-109-79-150 60 6 112 51 133 111-25 17-42 31-54 39Z"/>
+    <path d="M382 192c6-76 42-132 93-158 22 56 2 122-47 164-18-3-34-5-46-6Z"/>
+  </g>
+  <text x="62" y="105" fill="#173a29" font-family="Georgia, serif" font-size="54" font-weight="700">Tây Nguyên Food</text>
+  <text x="65" y="155" fill="#173a29" font-family="Arial, sans-serif" font-size="24" letter-spacing="4">SẢN VẬT TỪ ĐẤT ĐỎ BAZAN</text>
+</svg>
