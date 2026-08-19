@@ -5,9 +5,9 @@
   "outputDirectory": "public",
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/products", "destination": "/index.html" },
-    { "source": "/story", "destination": "/index.html" },
-    { "source": "/journal", "destination": "/index.html" },
-    { "source": "/contact", "destination": "/index.html" }
+    { "source": "/products", "destination": "/" },
+    { "source": "/story", "destination": "/" },
+    { "source": "/journal", "destination": "/" },
+    { "source": "/contact", "destination": "/" }
   ]
 }
