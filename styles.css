@@ -50,6 +50,23 @@ body.has-overlay {
   overflow: hidden;
 }
 
+.route-progress {
+  position: fixed;
+  inset: 0 auto auto 0;
+  z-index: 80;
+  width: 100%;
+  height: 3px;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(90deg, var(--sun), #f5d28a, var(--forest-700));
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+body.is-section-changing .route-progress {
+  animation: route-progress 0.62s cubic-bezier(0.22, 0.84, 0.32, 1) both;
+}
+
 button,
 input,
 select,
@@ -248,8 +265,13 @@ a {
 }
 
 .primary-nav a:hover::after,
-.primary-nav a:focus-visible::after {
+.primary-nav a:focus-visible::after,
+.primary-nav a.is-active::after {
   transform: scaleX(1);
+}
+
+.primary-nav a.is-active {
+  color: var(--forest-900);
 }
 
 .header-actions {
@@ -2803,6 +2825,13 @@ dialog::backdrop {
 
 .reveal {
   animation: reveal-up 0.7s both;
+}
+
+@keyframes route-progress {
+  0% { opacity: 0; transform: scaleX(0); }
+  18% { opacity: 1; }
+  72% { opacity: 1; transform: scaleX(0.84); }
+  100% { opacity: 0; transform: scaleX(1); }
 }
 
 @keyframes hero-scale {

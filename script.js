@@ -60,6 +60,7 @@ const elements = {
   toastMessage: document.querySelector("#toastMessage"),
   menuToggle: document.querySelector("#menuToggle"),
   primaryNav: document.querySelector("#primaryNav"),
+  sectionLinks: Array.from(document.querySelectorAll("[data-section-link]")),
 };
 
 function readStorage(key, fallback) {
@@ -1028,6 +1029,78 @@ async function handleCheckoutSubmit(event) {
   }
 }
 
+function getSectionIdFromLocation(location = window.location) {
+  const sectionIds = ["home", "products", "story", "journal", "contact"];
+  const hashSection = decodeURIComponent(String(location.hash || "").replace(/^#/, ""));
+  if (sectionIds.includes(hashSection)) return hashSection;
+
+  const pathSection = decodeURIComponent(String(location.pathname || "").replace(/^\/+|\/+$/g, ""));
+  return sectionIds.includes(pathSection) ? pathSection : "home";
+}
+
+function getSectionHref(sectionId) {
+  return sectionId === "home" ? "/" : "/" + sectionId;
+}
+
+function setActiveSection(sectionId) {
+  elements.sectionLinks.forEach((link) => {
+    const isActive = link.dataset.section === sectionId;
+    link.classList.toggle("is-active", isActive);
+    if (isActive) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  });
+}
+
+function initializeSectionNavigation() {
+  const sectionIds = ["home", "products", "story", "journal", "contact"];
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  function scrollToSection(sectionId, behavior = "smooth") {
+    const target = document.getElementById(sectionId);
+    if (!target) return;
+    target.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : behavior, block: "start" });
+  }
+
+  elements.sectionLinks.forEach((link) => {
+    link.addEventListener("click", (event) => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const sectionId = link.dataset.section || "home";
+      event.preventDefault();
+      setActiveSection(sectionId);
+      window.history.pushState(null, "", getSectionHref(sectionId));
+      document.body.classList.remove("is-section-changing");
+      void document.body.offsetWidth;
+      document.body.classList.add("is-section-changing");
+      window.setTimeout(() => document.body.classList.remove("is-section-changing"), 650);
+      scrollToSection(sectionId);
+    });
+  });
+
+  const sectionObserver = new IntersectionObserver(
+    (entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible) setActiveSection(visible.target.id);
+    },
+    { rootMargin: "-28% 0px -58% 0px", threshold: [0.08, 0.25, 0.55] },
+  );
+  sectionIds.forEach((sectionId) => {
+    const section = document.getElementById(sectionId);
+    if (section) sectionObserver.observe(section);
+  });
+
+  window.addEventListener("popstate", () => {
+    const sectionId = getSectionIdFromLocation();
+    setActiveSection(sectionId);
+    scrollToSection(sectionId, "auto");
+  });
+  window.addEventListener("hashchange", () => setActiveSection(getSectionIdFromLocation()));
+  const initialSection = getSectionIdFromLocation();
+  setActiveSection(initialSection);
+  window.requestAnimationFrame(() => scrollToSection(initialSection, "auto"));
+}
+
 function bindEvents() {
   document.addEventListener("error", (event) => {
     const image = event.target;
@@ -1234,6 +1307,7 @@ function bindEvents() {
 
 async function initialize() {
   bindEvents();
+  initializeSectionNavigation();
   try {
     const responses = await Promise.all([
       api("/api/categories"),

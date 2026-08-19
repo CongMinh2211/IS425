@@ -3,5 +3,11 @@
   "framework": null,
   "buildCommand": "npm run build",
   "outputDirectory": "public",
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/products", "destination": "/index.html" },
+    { "source": "/story", "destination": "/index.html" },
+    { "source": "/journal", "destination": "/index.html" },
+    { "source": "/contact", "destination": "/index.html" }
+  ]
 }

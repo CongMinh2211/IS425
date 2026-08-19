@@ -10,6 +10,7 @@ const DATABASE_PATH = path.join(DATA_DIR, "tay-nguyen-food.sqlite");
 const PORT = Number(process.env.PORT || 3000);
 const SESSION_COOKIE = "tnf_session";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 14;
+const CLIENT_ROUTES = new Set(["/products", "/story", "/journal", "/contact"]);
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
 
@@ -924,7 +925,9 @@ async function handleApi(request, response, url) {
 }
 
 function serveStatic(response, pathname) {
-  const relativePath = pathname === "/" ? "index.html" : decodeURIComponent(pathname).replace(/^\/+/, "");
+  const relativePath = pathname === "/" || CLIENT_ROUTES.has(pathname)
+    ? "index.html"
+    : decodeURIComponent(pathname).replace(/^\/+/, "");
   if (relativePath.startsWith("data/")) throw new HttpError(403, "Không được truy cập dữ liệu hệ thống.");
 
   const filePath = path.resolve(ROOT, relativePath);

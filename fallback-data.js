@@ -1,4 +1,4 @@
-const fallbackData = {
+window.TNF_FALLBACK_DATA = {
   categories: [
     { id: "coffee", name: "Cà phê", icon: "bi-cup-hot-fill", description: "Hạt cà phê đậm vị cao nguyên" },
     { id: "nuts", name: "Mắc ca", icon: "bi-brightness-alt-high-fill", description: "Béo bùi, tiện dùng mỗi ngày" },
@@ -241,5 +241,3 @@ const fallbackData = {
     },
   ],
 };
-
-window.TNF_FALLBACK_DATA = fallbackData;
