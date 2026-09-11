@@ -593,7 +593,7 @@ function productCardHTML(product) {
   const heartIcon = saved ? "-fill" : "";
   const savedClass = saved ? " is-saved" : "";
   const wishLabel = saved ? "Bỏ lưu" : "Lưu";
-  const detailHref = "/products/" + encodeURIComponent(product.slug || product.id);
+  const detailHref = "/chi-tiet-san-pham/" + encodeURIComponent(product.slug || product.id);
 
   return [
     "<article class='product-card'>",
@@ -1036,8 +1036,14 @@ function getSectionIdFromLocation(location = window.location) {
   if (sectionIds.includes(hashSection)) return hashSection;
 
   const pathSection = decodeURIComponent(String(location.pathname || "").replace(/^\/+|\/+$/g, ""));
-  if (pathSection.startsWith("products/")) return "products";
+  if (pathSection.startsWith("chi-tiet-san-pham/")) return "products";
   return sectionIds.includes(pathSection) ? pathSection : "home";
+}
+
+function getCategoryFromLocation(location = window.location) {
+  const category = new URLSearchParams(location.search).get("category");
+  if (!category || category === "all") return "all";
+  return state.categories.some((item) => item.id === category) ? category : "all";
 }
 
 function getSectionHref(sectionId) {
@@ -1100,14 +1106,12 @@ function initializeSectionNavigation() {
   window.addEventListener("hashchange", () => setActiveSection(getSectionIdFromLocation()));
   const initialSection = getSectionIdFromLocation();
   setActiveSection(initialSection);
-  window.requestAnimationFrame(() => {
-    scrollToSection(initialSection, "auto");
-  });
+  window.requestAnimationFrame(() => scrollToSection(initialSection, "auto"));
 }
 
 function openProductFromPath() {
   const path = decodeURIComponent(String(location.pathname || "").replace(/^\/+|\/+$/g, ""));
-  if (!path.startsWith("products/")) return;
+  if (!path.startsWith("chi-tiet-san-pham/")) return;
   const slug = path.split("/").slice(1).join("/");
   const product = state.products.find((item) => item.slug === slug || String(item.id) === slug);
   if (!product) return;
@@ -1127,7 +1131,8 @@ function bindEvents() {
     if (categoryTarget) {
       event.preventDefault();
       setCategory(categoryTarget.dataset.category);
-      window.history.pushState(null, "", "/products");
+      const category = categoryTarget.dataset.category || "all";
+      window.history.pushState(null, "", category === "all" ? "/products" : "/products?category=" + encodeURIComponent(category));
       if (categoryTarget.classList.contains("category-link")) {
         document.querySelector("#products")?.scrollIntoView({ behavior: "smooth", block: "start" });
       }
@@ -1247,7 +1252,7 @@ function bindEvents() {
     if (action === "quick-view") {
       event.preventDefault();
       const product = getProduct(productId);
-      if (product?.slug) window.history.pushState(null, "", "/products/" + product.slug);
+      if (product?.slug) window.history.pushState(null, "", "/chi-tiet-san-pham/" + product.slug);
       openQuickView(productId);
       return;
     }
@@ -1338,6 +1343,7 @@ async function initialize() {
     state.posts = responses[2].items;
     state.user = toSafeUser(responses[3].user);
     state.dataSource = "sqlite";
+    if (getSectionIdFromLocation() === "products") state.category = getCategoryFromLocation();
     sanitizeClientState();
     renderAll();
     openProductFromPath();
@@ -1348,6 +1354,7 @@ async function initialize() {
       state.posts = fallbackData.posts;
       state.user = restoreLocalUser();
       state.dataSource = "fallback";
+      if (getSectionIdFromLocation() === "products") state.category = getCategoryFromLocation();
       sanitizeClientState();
       renderAll();
       openProductFromPath();

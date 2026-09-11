@@ -6,7 +6,7 @@
   "cleanUrls": true,
   "rewrites": [
     { "source": "/products", "destination": "/" },
-    { "source": "/products/:slug", "destination": "/" },
+    { "source": "/chi-tiet-san-pham/:slug", "destination": "/" },
     { "source": "/story", "destination": "/" },
     { "source": "/journal", "destination": "/" },
     { "source": "/contact", "destination": "/" }
