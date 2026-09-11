@@ -10,6 +10,9 @@ fs.rmSync(output, { recursive: true, force: true });
 fs.mkdirSync(output, { recursive: true });
 
 staticFiles.forEach((file) => fs.copyFileSync(path.join(root, file), path.join(output, file)));
+fs.readdirSync(root)
+  .filter((file) => /^google[a-z0-9]+\.html$/i.test(file))
+  .forEach((file) => fs.copyFileSync(path.join(root, file), path.join(output, file)));
 clientRoutes.forEach((route) => {
   fs.copyFileSync(path.join(root, "index.html"), path.join(output, `${route}.html`));
 });
