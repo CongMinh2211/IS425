@@ -593,6 +593,7 @@ function productCardHTML(product) {
   const heartIcon = saved ? "-fill" : "";
   const savedClass = saved ? " is-saved" : "";
   const wishLabel = saved ? "Bỏ lưu" : "Lưu";
+  const detailHref = "/products/" + encodeURIComponent(product.slug || product.id);
 
   return [
     "<article class='product-card'>",
@@ -612,7 +613,7 @@ function productCardHTML(product) {
     "<span class='product-weight'>", escapeHTML(product.weight), "</span></div>",
     "<div class='product-actions'>",
     "<button class='card-button' type='button' data-action='add-cart' data-product-id='", product.id, "'><i class='bi bi-bag-plus-fill'></i> Thêm giỏ</button>",
-    "<button class='card-button secondary' type='button' data-action='quick-view' data-product-id='", product.id, "' aria-label='Xem nhanh ", escapeHTML(product.name), "'><i class='bi bi-arrow-up-right'></i></button>",
+    "<a class='card-button secondary detail-link' href='", detailHref, "' data-action='quick-view' data-product-id='", product.id, "' aria-label='Xem chi tiết ", escapeHTML(product.name), "' title='Mở link chi tiết sản phẩm'><i class='bi bi-arrow-up-right'></i></a>",
     "</div></div></article>",
   ].join("");
 }
@@ -1035,6 +1036,7 @@ function getSectionIdFromLocation(location = window.location) {
   if (sectionIds.includes(hashSection)) return hashSection;
 
   const pathSection = decodeURIComponent(String(location.pathname || "").replace(/^\/+|\/+$/g, ""));
+  if (pathSection.startsWith("products/")) return "products";
   return sectionIds.includes(pathSection) ? pathSection : "home";
 }
 
@@ -1098,7 +1100,18 @@ function initializeSectionNavigation() {
   window.addEventListener("hashchange", () => setActiveSection(getSectionIdFromLocation()));
   const initialSection = getSectionIdFromLocation();
   setActiveSection(initialSection);
-  window.requestAnimationFrame(() => scrollToSection(initialSection, "auto"));
+  window.requestAnimationFrame(() => {
+    scrollToSection(initialSection, "auto");
+  });
+}
+
+function openProductFromPath() {
+  const path = decodeURIComponent(String(location.pathname || "").replace(/^\/+|\/+$/g, ""));
+  if (!path.startsWith("products/")) return;
+  const slug = path.split("/").slice(1).join("/");
+  const product = state.products.find((item) => item.slug === slug || String(item.id) === slug);
+  if (!product) return;
+  window.setTimeout(() => openQuickView(product.id), 180);
 }
 
 function bindEvents() {
@@ -1114,6 +1127,7 @@ function bindEvents() {
     if (categoryTarget) {
       event.preventDefault();
       setCategory(categoryTarget.dataset.category);
+      window.history.pushState(null, "", "/products");
       if (categoryTarget.classList.contains("category-link")) {
         document.querySelector("#products")?.scrollIntoView({ behavior: "smooth", block: "start" });
       }
@@ -1133,6 +1147,7 @@ function bindEvents() {
     if (event.target.closest("#wishlistButton") || event.target.closest("#wishlistTextButton")) {
       state.showingWishlist = !state.showingWishlist;
       state.category = "all";
+      window.history.pushState(null, "", "/products");
       renderCategories();
       renderProducts();
       document.querySelector("#products")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1230,6 +1245,9 @@ function bindEvents() {
       return;
     }
     if (action === "quick-view") {
+      event.preventDefault();
+      const product = getProduct(productId);
+      if (product?.slug) window.history.pushState(null, "", "/products/" + product.slug);
       openQuickView(productId);
       return;
     }
@@ -1322,6 +1340,7 @@ async function initialize() {
     state.dataSource = "sqlite";
     sanitizeClientState();
     renderAll();
+    openProductFromPath();
   } catch (error) {
     if (fallbackData.products.length) {
       state.categories = fallbackData.categories;
@@ -1331,6 +1350,7 @@ async function initialize() {
       state.dataSource = "fallback";
       sanitizeClientState();
       renderAll();
+      openProductFromPath();
       showToast("Bản HTML đang dùng dữ liệu demo. Chạy npm start để kết nối SQLite.");
       return;
     }

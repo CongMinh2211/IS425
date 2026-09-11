@@ -1,0 +1,106 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+  :root { --forest: #123c29; --forest-soft: #1d5a3b; --cream: #fffaf0; --paper: #fffdf7; --gold: #be8928; --line: #e4d9c3; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--cream); color: #173b2a; font-family: "Be Vietnam Pro", "Noto Sans", Arial, sans-serif; }
+  .catalog { overflow: hidden; border-radius: 22px; background: var(--cream); }
+  .catalog-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding: 35px 6% 25px; background: linear-gradient(118deg, #103a28, #1c5739); color: #fffdf5; }
+  .catalog-head p { margin: 0 0 10px; color: #f2c65f; font-size: 11px; font-weight: 800; letter-spacing: 1.1px; text-transform: uppercase; }
+  .catalog-head h2 { margin: 0; font-size: clamp(28px, 4.2vw, 48px); line-height: 1.03; letter-spacing: -1.4px; }
+  .catalog-head > a { display: inline-flex; align-items: center; gap: 7px; flex: none; padding: 11px 15px; border: 1px solid rgba(255, 255, 255, .45); border-radius: 999px; color: #fffdf5; font-size: 12px; font-weight: 800; text-decoration: none; transition: transform .2s ease, background .2s ease; }
+  .catalog-head > a i { color: #f2c65f; }
+  .catalog-head > a:hover, .catalog-head > a:focus-visible { background: rgba(255, 255, 255, .12); transform: translateY(-2px); }
+  .category-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1px; background: var(--line); }
+  .category { min-height: 131px; padding: 18px 14px; background: var(--paper); color: #173b2a; text-decoration: none; transition: background .2s ease, transform .2s ease; }
+  .category:hover, .category:focus-visible { z-index: 1; background: #fff2d7; transform: translateY(-3px); }
+  .category i { display: block; margin-bottom: 11px; color: var(--gold); font-size: 23px; }
+  .category strong { display: block; font-size: 13px; line-height: 1.3; }
+  .category small { display: block; margin-top: 5px; color: #70776d; font-size: 10px; line-height: 1.4; }
+  .selection { padding: 25px 6% 30px; }
+  .selection-title { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 16px; }
+  .selection-title strong { font-size: 20px; }
+  .selection-title span { color: #768076; font-size: 11px; }
+  .product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; }
+  .product { overflow: hidden; border: 1px solid #ebe2cf; border-radius: 14px; background: #fff; box-shadow: 0 8px 18px rgba(44, 51, 35, .045); }
+  .product-image { display: block; width: 100%; height: 150px; background: #f0e5cf; object-fit: cover; object-position: center; }
+  .product-info { padding: 13px 14px 14px; }
+  .product-label { color: var(--gold); font-size: 10px; font-weight: 800; letter-spacing: .7px; }
+  .product strong { display: block; min-height: 38px; margin: 6px 0 11px; font-size: 14px; line-height: 1.34; }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; color: #9c6a1f; font-size: 13px; font-weight: 800; }
+  .product-footer a { display: grid; width: 29px; height: 29px; place-items: center; border-radius: 50%; background: var(--forest-soft); color: #fff; text-decoration: none; transition: transform .2s ease, background .2s ease; }
+  .product-footer a:hover, .product-footer a:focus-visible { background: #0f3926; transform: translateY(-2px); }
+  .service-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0 6% 28px; padding: 14px 18px; border-radius: 14px; background: #123c29; color: #fffdf5; }
+  .service-item { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .service-item + .service-item { border-left: 1px solid rgba(255, 255, 255, .16); padding-left: 13px; }
+  .service-item i { flex: none; color: #f2c65f; font-size: 21px; }
+  .service-item strong { display: block; font-size: 11px; }
+  .service-item small { display: block; margin-top: 2px; color: #d4e3d8; font-size: 9px; line-height: 1.35; }
+  .catalog-outro { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 6% 24px; color: #466351; }
+  .catalog-outro p { margin: 0; font-size: 11px; line-height: 1.5; }
+  .catalog-outro strong { color: var(--forest); font-size: 13px; }
+  .catalog-outro a { display: inline-flex; align-items: center; gap: 7px; flex: none; border-bottom: 1px solid currentColor; color: var(--forest-soft); font-size: 11px; font-weight: 800; text-decoration: none; transition: color .2s ease, transform .2s ease; }
+  .catalog-outro a:hover, .catalog-outro a:focus-visible { color: #a66f17; transform: translateX(2px); }
+  @media (max-width: 720px) {
+    html, body { height: 100%; overflow: hidden; }
+    .catalog { height: 100vh; border-radius: 12px; }
+    .catalog-head { align-items: center; flex-direction: row; min-height: 64px; padding: 10px 12px; }
+    .catalog-head p { display: none; }
+    .catalog-head h2 { font-size: 20px; letter-spacing: -.7px; }
+    .catalog-head > a { gap: 3px; padding: 6px 7px; font-size: 8px; }
+    .category-grid { display: flex; height: 52px; overflow: hidden; }
+    .category { flex: 0 0 88px; min-height: 0; padding: 6px 7px; }
+    .category i { margin: 0 0 3px; font-size: 13px; }
+    .category strong { display: block; overflow: hidden; font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
+    .category small { display: none; }
+    .selection { padding: 7px 12px 8px; }
+    .selection-title { margin-bottom: 5px; }
+    .selection-title strong { font-size: 11px; }
+    .selection-title span { display: none; }
+    .product-grid { display: flex; height: 80px; gap: 8px; overflow-x: auto; padding: 0 1px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .product-grid::-webkit-scrollbar { display: none; }
+    .product { display: grid; grid-template-columns: 64px 1fr; flex: 0 0 156px; height: 80px; scroll-snap-align: start; }
+    .product-image { grid-row: 1; width: 64px; height: 80px; }
+    .product-info { min-width: 0; padding: 6px 7px; }
+    .product-label { font-size: 7px; }
+    .product strong { display: -webkit-box; overflow: hidden; font-size: 9px; line-height: 1.2; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+    .product-footer { margin-top: 3px; font-size: 9px; }
+    .product-footer a { width: 19px; height: 19px; font-size: 8px; }
+    .service-strip, .catalog-outro { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+</style>
+
+<section class="catalog" aria-label="Gian hàng Tây Nguyên">
+  <div class="catalog-head">
+    <div><p><i class="bi bi-basket2-fill"></i> Gian hàng Tây Nguyên</p><h2>Chọn quà từ<br>đại ngàn.</h2></div>
+    <a href="https://is-425.vercel.app/products" target="_blank" rel="noopener">Xem cửa hàng đầy đủ <i class="bi bi-arrow-up-right"></i></a>
+  </div>
+  <div class="category-grid">
+    <a class="category" href="https://is-425.vercel.app/products/ca-phe-rang-moc-buon-ma-thuot" target="_blank" rel="noopener"><i class="bi bi-cup-hot-fill"></i><strong>Cà phê Tây Nguyên</strong><small>Robusta rang mộc</small></a>
+    <a class="category" href="https://is-425.vercel.app/products/sau-rieng-say-lanh-krong-pac" target="_blank" rel="noopener"><i class="bi bi-stars"></i><strong>Sầu riêng Krông Pắc</strong><small>Đặc sản theo mùa</small></a>
+    <a class="category" href="https://is-425.vercel.app/products/mat-ong-rung-tay-nguyen" target="_blank" rel="noopener"><i class="bi bi-flower1"></i><strong>Mật ong rừng</strong><small>Hương rừng tự nhiên</small></a>
+    <a class="category" href="https://is-425.vercel.app/products/mac-ca-dak-lak-rang-moc" target="_blank" rel="noopener"><i class="bi bi-tree-fill"></i><strong>Mắc ca</strong><small>Hạt giòn, bùi thơm</small></a>
+    <a class="category" href="https://is-425.vercel.app/products/tieu-den-dak-nong" target="_blank" rel="noopener"><i class="bi bi-circle-fill"></i><strong>Tiêu Đắk Nông</strong><small>Cay nồng vừa đủ</small></a>
+    <a class="category" href="https://is-425.vercel.app/products/combo-qua-tang-dai-ngan" target="_blank" rel="noopener"><i class="bi bi-gift-fill"></i><strong>Quà tặng đặc sản</strong><small>Combo chỉn chu</small></a>
+  </div>
+  <div class="selection">
+    <div class="selection-title"><strong>Gợi ý đang được yêu thích</strong><span>Đóng gói sẵn sàng để trao</span></div>
+    <div class="product-grid">
+      <article class="product"><img class="product-image" src="https://is-425.vercel.app/assets/product-coffee.jpg" alt="Cà phê Robusta rang mộc Buôn Ma Thuột" loading="lazy"><div class="product-info"><span class="product-label">CÀ PHÊ</span><strong>Robusta Mộc Buôn Ma Thuột</strong><div class="product-footer"><span>189.000đ</span><a href="https://is-425.vercel.app/products/ca-phe-rang-moc-buon-ma-thuot" target="_blank" rel="noopener" aria-label="Xem Robusta Mộc Buôn Ma Thuột"><i class="bi bi-arrow-up-right"></i></a></div></div></article>
+      <article class="product"><img class="product-image" src="https://is-425.vercel.app/assets/product-durian-new.png" alt="Sầu riêng sấy lạnh Krông Pắc" loading="lazy"><div class="product-info"><span class="product-label">SẦU RIÊNG</span><strong>Sầu riêng sấy lạnh Krông Pắc</strong><div class="product-footer"><span>235.000đ</span><a href="https://is-425.vercel.app/products/sau-rieng-say-lanh-krong-pac" target="_blank" rel="noopener" aria-label="Xem sầu riêng sấy lạnh Krông Pắc"><i class="bi bi-arrow-up-right"></i></a></div></div></article>
+      <article class="product"><img class="product-image" src="https://is-425.vercel.app/assets/product-honey-new.png" alt="Mật ong rừng Tây Nguyên" loading="lazy"><div class="product-info"><span class="product-label">MẬT ONG</span><strong>Mật ong rừng Tây Nguyên</strong><div class="product-footer"><span>245.000đ</span><a href="https://is-425.vercel.app/products/mat-ong-rung-tay-nguyen" target="_blank" rel="noopener" aria-label="Xem mật ong rừng Tây Nguyên"><i class="bi bi-arrow-up-right"></i></a></div></div></article>
+    </div>
+  </div>
+  <div class="service-strip" aria-label="Tiện ích mua hàng">
+    <div class="service-item"><i class="bi bi-truck"></i><div><strong>Giao tận nơi</strong><small>Đóng gói kỹ trước khi gửi</small></div></div>
+    <div class="service-item"><i class="bi bi-gift"></i><div><strong>Gói quà chỉn chu</strong><small>Phù hợp để trao dịp đặc biệt</small></div></div>
+    <div class="service-item"><i class="bi bi-chat-heart"></i><div><strong>Tư vấn chọn quà</strong><small>Chọn đúng gu chỉ trong một chạm</small></div></div>
+  </div>
+  <div class="catalog-outro">
+    <p><strong>Muốn chọn nhanh hơn?</strong><br>Khám phá các đặc sản theo mùa và những hộp quà được yêu thích.</p>
+    <a href="https://is-425.vercel.app/products" target="_blank" rel="noopener">Khám phá toàn bộ cửa hàng <i class="bi bi-arrow-right"></i></a>
+  </div>
+</section>

@@ -1,0 +1,70 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fbf5e9; color: #173b2b; font-family: "Be Vietnam Pro", "Noto Sans", "Segoe UI", Arial, sans-serif; }
+  .tnf-showcase { min-height: 430px; overflow: hidden; border-radius: 18px; background: radial-gradient(circle at 93% 0%, rgba(230,181,82,.27), transparent 27%), #fbf5e9; }
+  .tnf-intro { display: flex; align-items: end; justify-content: space-between; gap: 22px; padding: 26px 28px 15px; }
+  .tnf-chip { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 8px; padding: 5px 9px; border-radius: 99px; color: #936119; background: #f2dfb2; font-size: 10px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; }
+  .tnf-intro h2 { margin: 0; color: #173b2b; font-size: clamp(24px, 4vw, 35px); font-weight: 800; letter-spacing: -1.1px; line-height: 1.1; }
+  .tnf-intro h2 em { color: #ad7623; font-style: normal; }
+  .tnf-intro > p { max-width: 190px; margin: 0 0 2px; color: #667369; font-size: 11px; line-height: 1.55; }
+  .tnf-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 0 28px 16px; }
+  .tnf-card { min-width: 0; overflow: hidden; border: 1px solid #e8dfcf; border-radius: 13px; background: #fffdf8; box-shadow: 0 8px 18px rgba(28, 57, 39, .05); }
+  .tnf-photo { position: relative; height: 114px; background-position: center; background-size: cover; }
+  .tnf-photo::after { position: absolute; inset: 0; content: ""; background: linear-gradient(180deg, transparent 38%, rgba(19, 52, 36, .29)); }
+  .tnf-photo--coffee { background-image: url("https://is-425.vercel.app/assets/product-coffee.jpg"); }
+  .tnf-photo--macadamia { background-image: url("https://is-425.vercel.app/assets/product-durian-new.png"); }
+  .tnf-photo--honey { background-image: url("https://is-425.vercel.app/assets/product-honey-new.png"); }
+  .tnf-tag { position: absolute; z-index: 1; top: 9px; left: 9px; display: inline-flex; align-items: center; gap: 5px; padding: 5px 7px; border-radius: 99px; color: #fffdf8; background: rgba(20, 59, 42, .88); font-size: 9px; font-weight: 700; }
+  .tnf-card-copy { padding: 11px; }
+  .tnf-card-copy h3 { min-height: 34px; margin: 0; color: #193e2e; font-size: 12px; font-weight: 800; line-height: 1.38; }
+  .tnf-card-copy p { overflow: hidden; min-height: 30px; margin: 5px 0 8px; color: #718078; font-size: 10px; line-height: 1.48; }
+  .tnf-card-bottom { display: flex; align-items: center; justify-content: space-between; gap: 7px; padding-top: 8px; border-top: 1px solid #eee5d7; }
+  .tnf-price { color: #aa711f; font-size: 11px; font-weight: 800; white-space: nowrap; }
+  .tnf-open { display: grid; width: 25px; height: 25px; place-items: center; border-radius: 50%; color: #fffdf8; background: #1b563b; font-size: 12px; text-decoration: none; }
+  .tnf-promise { display: grid; grid-template-columns: repeat(3, 1fr); min-height: 67px; color: #f9f1df; background: #173d2a; }
+  .tnf-promise-item { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 11px; border-right: 1px solid rgba(255,255,255,.14); text-align: left; }
+  .tnf-promise-item:last-child { border-right: 0; }
+  .tnf-promise-item i { color: #f4c75f; font-size: 17px; }
+  .tnf-promise-item strong { display: block; font-size: 10px; font-weight: 800; line-height: 1.35; }
+  .tnf-promise-item span { display: block; margin-top: 2px; color: #cbd8cc; font-size: 9px; line-height: 1.35; }
+  @media (max-width: 430px) {
+    .tnf-showcase { min-height: 420px; }
+    .tnf-intro { display: block; padding: 21px 18px 13px; }
+    .tnf-intro > p { display: none; }
+    .tnf-grid { gap: 7px; padding: 0 18px 13px; }
+    .tnf-photo { height: 93px; }
+    .tnf-card-copy { padding: 8px; }
+    .tnf-card-copy h3 { min-height: 31px; font-size: 10px; }
+    .tnf-card-copy p { display: none; }
+    .tnf-card-bottom { margin-top: 6px; }
+    .tnf-promise-item { gap: 5px; padding: 8px 5px; }
+    .tnf-promise-item i { font-size: 14px; }
+    .tnf-promise-item strong { font-size: 8px; }
+    .tnf-promise-item span { display: none; }
+  }
+  .tnf-card{animation:tnf-product-rise .58s both;transition:transform .22s ease,box-shadow .22s ease}.tnf-card:nth-child(2){animation-delay:.08s}.tnf-card:nth-child(3){animation-delay:.16s}.tnf-card:hover{box-shadow:0 13px 25px rgba(18,57,40,.14);transform:translateY(-5px)}.tnf-card:hover .tnf-photo{transform:scale(1.035)}.tnf-photo{transition:transform .45s ease}@keyframes tnf-product-rise{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}@media(prefers-reduced-motion:reduce){.tnf-card{animation:none;transition:none}.tnf-photo{transition:none}}
+</style>
+
+<section class="tnf-showcase">
+  <div class="tnf-intro">
+    <div>
+      <span class="tnf-chip"><i class="bi bi-stars"></i> Chọn lọc theo mùa</span>
+      <h2>Đặc sản tử tế,<br><em>đậm vị đại ngàn.</em></h2>
+    </div>
+    <p>Nông sản bản địa, đóng gói chỉn chu và sẵn sàng trở thành món quà mang câu chuyện Tây Nguyên.</p>
+  </div>
+  <div class="tnf-grid">
+    <article class="tnf-card"><div class="tnf-photo tnf-photo--coffee"><span class="tnf-tag"><i class="bi bi-cup-hot-fill"></i> Cà phê</span></div><div class="tnf-card-copy"><h3>Robusta Mộc Buôn Ma Thuột</h3><p>Hương cacao, hậu vị đậm.</p><div class="tnf-card-bottom"><span class="tnf-price">189.000đ</span><a class="tnf-open" href="https://is-425.vercel.app/products/ca-phe-rang-moc-buon-ma-thuot" target="_blank" rel="noopener" aria-label="Xem cà phê"><i class="bi bi-arrow-up-right"></i></a></div></div></article>
+    <article class="tnf-card"><div class="tnf-photo tnf-photo--macadamia"><span class="tnf-tag"><i class="bi bi-stars"></i> Sầu riêng</span></div><div class="tnf-card-copy"><h3>Sầu riêng sấy lạnh Krông Pắc</h3><p>Thơm béo, đúng mùa.</p><div class="tnf-card-bottom"><span class="tnf-price">235.000đ</span><a class="tnf-open" href="https://is-425.vercel.app/products/sau-rieng-say-lanh-krong-pac" target="_blank" rel="noopener" aria-label="Xem sầu riêng"><i class="bi bi-arrow-up-right"></i></a></div></div></article>
+    <article class="tnf-card"><div class="tnf-photo tnf-photo--honey"><span class="tnf-tag"><i class="bi bi-flower1"></i> Mật ong</span></div><div class="tnf-card-copy"><h3>Mật ong rừng Tây Nguyên</h3><p>Ngọt thanh, thơm dịu.</p><div class="tnf-card-bottom"><span class="tnf-price">245.000đ</span><a class="tnf-open" href="https://is-425.vercel.app/products/mat-ong-rung-tay-nguyen" target="_blank" rel="noopener" aria-label="Xem mật ong"><i class="bi bi-arrow-up-right"></i></a></div></div></article>
+  </div>
+  <div class="tnf-promise">
+    <div class="tnf-promise-item"><i class="bi bi-patch-check-fill"></i><div><strong>Nguồn gốc rõ ràng</strong><span>Ưu tiên nông sản bản địa</span></div></div>
+    <div class="tnf-promise-item"><i class="bi bi-box-seam-fill"></i><div><strong>Đóng gói chỉn chu</strong><span>Phù hợp để dùng và làm quà</span></div></div>
+    <div class="tnf-promise-item"><i class="bi bi-heart-fill"></i><div><strong>Chọn bằng sự tử tế</strong><span>Gửi trọn hương vị vùng cao</span></div></div>
+  </div>
+</section>
