@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://is-425.vercel.app/sitemap.xml

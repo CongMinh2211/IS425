@@ -1629,8 +1629,8 @@ a {
 
 .site-footer {
   display: grid;
-  grid-template-columns: 1.1fr 0.55fr 0.85fr;
-  gap: clamp(28px, 5vw, 75px);
+  grid-template-columns: 1.05fr 0.95fr 0.8fr;
+  gap: clamp(28px, 4vw, 58px);
   padding: 66px clamp(20px, 7vw, 115px) 25px;
   color: #dce8da;
   background: #0d281d;
@@ -1645,16 +1645,50 @@ a {
 }
 
 .footer-brand > p {
-  max-width: 320px;
+  max-width: 360px;
   margin: 17px 0 0;
   color: #b2c3b3;
   font-size: 11px;
   line-height: 1.7;
 }
 
+.footer-contact-list {
+  display: grid;
+  gap: 9px;
+  max-width: 390px;
+  margin-top: 20px;
+}
+
+.footer-contact-list a,
+.footer-contact-list > span {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  align-items: center;
+  min-height: 34px;
+  color: #dbe8d7;
+  font-size: 10px;
+  line-height: 1.45;
+  text-decoration: none;
+}
+
+.footer-contact-list i {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  color: var(--sun);
+  background: rgba(230, 181, 92, 0.12);
+  border: 1px solid rgba(230, 181, 92, 0.24);
+  border-radius: 50%;
+}
+
+.footer-contact-list a:hover span {
+  color: var(--sun);
+}
+
 .footer-links {
   display: grid;
-  grid-template-columns: repeat(2, minmax(95px, 1fr));
+  grid-template-columns: repeat(3, minmax(98px, 1fr));
   gap: 24px;
 }
 
@@ -1673,6 +1707,7 @@ a {
 .footer-links a {
   color: #c4d2c4;
   font-size: 10px;
+  line-height: 1.45;
 }
 
 .footer-links a:hover {
@@ -2990,6 +3025,14 @@ dialog::backdrop {
     grid-column: 1 / -1;
   }
 
+  .footer-contact-list {
+    max-width: none;
+  }
+
+  .footer-links {
+    grid-template-columns: repeat(3, minmax(110px, 1fr));
+  }
+
   .account-shell {
     grid-template-columns: 1fr;
   }
@@ -3251,7 +3294,8 @@ dialog::backdrop {
   }
 
   .footer-links {
-    max-width: 300px;
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+    max-width: none;
   }
 
   .footer-bottom {
@@ -3334,6 +3378,17 @@ dialog::backdrop {
   .toast {
     right: 14px;
     bottom: 14px;
+  }
+}
+
+@media (max-width: 520px) {
+  .footer-links {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-contact-list a,
+  .footer-contact-list > span {
+    font-size: 11px;
   }
 }
 

@@ -3,7 +3,7 @@ const path = require("node:path");
 
 const root = __dirname;
 const output = path.join(root, "public");
-const staticFiles = ["index.html", "styles.css", "script.js", "fallback-data.js"];
+const staticFiles = ["index.html", "styles.css", "script.js", "fallback-data.js", "sitemap.xml", "robots.txt"];
 const clientRoutes = ["products", "story", "journal", "contact"];
 
 fs.rmSync(output, { recursive: true, force: true });
