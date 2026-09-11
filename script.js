@@ -76,6 +76,14 @@ function writeStorage(key, value) {
   window.localStorage.setItem(key, JSON.stringify(value));
 }
 
+function trackEvent(name, params = {}) {
+  if (typeof window.gtag !== "function") return;
+  window.gtag("event", name, {
+    source: "tay_nguyen_food_web",
+    ...params,
+  });
+}
+
 function saveLocalRecord(key, value) {
   const records = readStorage(key, []);
   records.unshift({ ...value, createdAt: new Date().toISOString() });
@@ -804,6 +812,10 @@ function setCategory(category) {
   renderCategories();
   renderProducts();
   renderCart();
+  trackEvent("select_product_category", {
+    category,
+    category_name: state.categories.find((item) => item.id === category)?.name || "Tất cả",
+  });
 }
 
 function resetFilters() {
@@ -1106,7 +1118,16 @@ function initializeSectionNavigation() {
   window.addEventListener("hashchange", () => setActiveSection(getSectionIdFromLocation()));
   const initialSection = getSectionIdFromLocation();
   setActiveSection(initialSection);
-  window.requestAnimationFrame(() => scrollToSection(initialSection, "auto"));
+  window.requestAnimationFrame(() => {
+    scrollToSection(initialSection, "auto");
+    if (initialSection === "products" && new URLSearchParams(location.search).has("category")) {
+      window.setTimeout(() => scrollToSection("products", "smooth"), 120);
+      trackEvent("open_filtered_products", {
+        category: getCategoryFromLocation(),
+        entry_url: location.href,
+      });
+    }
+  });
 }
 
 function openProductFromPath() {
@@ -1243,6 +1264,14 @@ function bindEvents() {
 
     if (action === "add-cart") {
       addToCart(productId);
+      const product = getProduct(productId);
+      trackEvent("add_to_cart", {
+        item_id: product?.slug || String(productId),
+        item_name: product?.name || "Unknown product",
+        item_category: product?.category || "unknown",
+        value: product?.price || 0,
+        currency: "VND",
+      });
       return;
     }
     if (action === "toggle-wishlist") {
@@ -1253,6 +1282,13 @@ function bindEvents() {
       event.preventDefault();
       const product = getProduct(productId);
       if (product?.slug) window.history.pushState(null, "", "/chi-tiet-san-pham/" + product.slug);
+      trackEvent("view_item", {
+        item_id: product?.slug || String(productId),
+        item_name: product?.name || "Unknown product",
+        item_category: product?.category || "unknown",
+        value: product?.price || 0,
+        currency: "VND",
+      });
       openQuickView(productId);
       return;
     }
