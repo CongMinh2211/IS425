@@ -2092,6 +2092,62 @@ dialog::backdrop {
   max-height: min(720px, calc(100vh - 60px));
 }
 
+.product-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 14px 66px 14px 20px;
+  color: var(--muted);
+  background: #fffaf0;
+  border-bottom: 1px solid var(--line);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.product-breadcrumb a,
+.product-breadcrumb-current {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.product-breadcrumb a {
+  gap: 7px;
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.product-breadcrumb a:hover,
+.product-breadcrumb a:focus-visible {
+  color: var(--forest-700);
+  transform: translateY(-1px);
+}
+
+.product-breadcrumb a:first-child i {
+  color: var(--gold-600);
+  font-size: 14px;
+}
+
+.product-breadcrumb a small {
+  margin-left: 5px;
+  color: var(--forest-700);
+  font: inherit;
+}
+
+.product-breadcrumb > .bi-chevron-right {
+  flex: 0 0 auto;
+  color: #b7a991;
+  font-size: 9px;
+}
+
+.product-breadcrumb-current {
+  overflow: hidden;
+  color: var(--forest-900);
+  text-overflow: ellipsis;
+}
+
 .dialog-close {
   position: absolute;
   z-index: 2;
@@ -3067,6 +3123,17 @@ dialog::backdrop {
 }
 
 @media (max-width: 630px) {
+  .product-breadcrumb {
+    gap: 6px;
+    padding: 12px 54px 12px 15px;
+    font-size: 10px;
+  }
+
+  .product-breadcrumb a:first-child span,
+  .product-breadcrumb a small {
+    display: none;
+  }
+
   .announcement {
     gap: 34px;
     padding-right: 16px;

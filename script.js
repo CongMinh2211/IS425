@@ -868,8 +868,18 @@ function renderQuickView(product) {
   const saved = state.wishlist.has(product.id);
   const comparePrice = product.compareAtPrice ? "<del>" + formatPrice(product.compareAtPrice) + "</del>" : "";
   const heartIcon = saved ? "-fill" : "";
+  const category = state.categories.find((item) => item.id === product.category);
+  const categoryName = category?.name || product.categoryName || "Sản phẩm";
+  const categoryHref = "/products?category=" + encodeURIComponent(product.category || "all");
 
   elements.quickViewContent.innerHTML = [
+    "<nav class='product-breadcrumb' aria-label='Đường dẫn điều hướng'>",
+    "<a href='/' aria-label='Về trang chủ'><i class='bi bi-house-door-fill'></i><span>Trang chủ</span></a>",
+    "<i class='bi bi-chevron-right' aria-hidden='true'></i>",
+    "<a href='", categoryHref, "'><span>Sản phẩm</span><small>", escapeHTML(categoryName), "</small></a>",
+    "<i class='bi bi-chevron-right' aria-hidden='true'></i>",
+    "<span class='product-breadcrumb-current' aria-current='page'>", escapeHTML(product.name), "</span>",
+    "</nav>",
     "<div class='quick-view'><div class='quick-view-image'>", imageHTML(product.image, product.name, "eager"), "</div>",
     "<div class='quick-view-content'><p class='eyebrow'><i class='bi bi-geo-alt-fill'></i> ", escapeHTML(product.origin), "</p>",
     "<h2 id='quickViewTitle'>", escapeHTML(product.name), "</h2>",
