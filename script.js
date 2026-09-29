@@ -130,7 +130,8 @@ function formatDateTime(value) {
 }
 
 function imageHTML(src, alt, loading = "lazy") {
-  return "<img src='" + escapeHTML(src) + "' alt='" + escapeHTML(alt) + "' loading='" + loading + "' data-image-fallback />";
+  const normalizedSrc = src?.startsWith("assets/") ? "/" + src : src;
+  return "<img src='" + escapeHTML(normalizedSrc || "/assets/product-fallback.svg") + "' alt='" + escapeHTML(alt) + "' loading='" + loading + "' data-image-fallback />";
 }
 
 async function api(url, options = {}) {
@@ -1144,7 +1145,7 @@ function bindEvents() {
     const image = event.target;
     if (!(image instanceof HTMLImageElement) || !image.matches("[data-image-fallback]") || image.dataset.fallbackApplied) return;
     image.dataset.fallbackApplied = "true";
-    image.src = "assets/product-fallback.svg";
+    image.src = "/assets/product-fallback.svg";
   }, true);
 
   document.addEventListener("click", (event) => {
