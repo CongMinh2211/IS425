@@ -285,6 +285,28 @@ a {
   color: var(--forest-900);
 }
 
+.primary-nav .site-bridge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 11px;
+  color: var(--forest-900);
+  background: #f7e8bd;
+  border: 1px solid rgba(196, 134, 26, 0.28);
+  border-radius: 999px;
+}
+
+.primary-nav .site-bridge::after {
+  display: none;
+}
+
+.primary-nav .site-bridge:hover,
+.primary-nav .site-bridge:focus-visible {
+  color: var(--white);
+  background: var(--forest-700);
+  border-color: var(--forest-700);
+}
+
 .header-actions {
   display: flex;
   align-items: center;
@@ -3035,6 +3057,11 @@ dialog::backdrop {
 
   .primary-nav a::after {
     display: none;
+  }
+
+  .primary-nav .site-bridge {
+    justify-content: center;
+    margin-top: 6px;
   }
 
   .hero {
